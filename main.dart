@@ -49,8 +49,6 @@ void addWorkout() {
 
   double volume = sets * reps * weight;
 
-  String progress = checkProgress(exercise, volume);
-
   workouts.add({
     'id': id,
     'exercise': exercise,
@@ -62,24 +60,6 @@ void addWorkout() {
 
   print("\nWorkout saved.");
   print("Total Volume: $volume");
-  print("Progress: $progress");
-}
-
-String checkProgress(String exercise, double newVolume) {
-  for (int i = workouts.length - 1; i >= 0; i--) {
-    if (workouts[i]['exercise'] == exercise) {
-      double oldVolume = workouts[i]['volume'];
-
-      if (newVolume > oldVolume) {
-        return "Improved";
-      } else if (newVolume == oldVolume) {
-        return "Same";
-      } else {
-        return "Regressed";
-      }
-    }
-  }
-  return "First record for this exercise";
 }
 
 void viewWorkouts() {
@@ -104,6 +84,8 @@ void updateWorkout() {
 
   for (var w in workouts) {
     if (w['id'] == id) {
+      double oldVolume = w['volume'];
+
       stdout.write("New Sets: ");
       w['sets'] = int.parse(stdin.readLineSync()!);
 
@@ -113,21 +95,36 @@ void updateWorkout() {
       stdout.write("New Weight (kg): ");
       w['weight'] = double.parse(stdin.readLineSync()!);
 
-      // recompute volume
-      w['volume'] = w['sets'] * w['reps'] * w['weight'];
+      double newVolume = w['sets'] * w['reps'] * w['weight'];
+      w['volume'] = newVolume;
 
       print("Workout updated.");
+
+      if (newVolume > oldVolume) {
+        print("Progress: Improved");
+      } else if (newVolume == oldVolume) {
+        print("Progress: Same");
+      } else {
+        print("Progress: Regressed");
+      }
+
       return;
     }
   }
 
-  print("Workout ID not found.");
+  print("Not a valid choice.");
 }
 
 void deleteWorkout() {
   stdout.write("Enter ID to delete: ");
   int id = int.parse(stdin.readLineSync()!);
 
+  int initialLength = workouts.length;
   workouts.removeWhere((w) => w['id'] == id);
-  print("Workout deleted.");
+
+  if (workouts.length == initialLength) {
+    print("Not a valid choice.");
+  } else {
+    print("Workout deleted.");
+  }
 }
