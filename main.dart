@@ -4,7 +4,7 @@ List<Map<String, dynamic>> workouts = [];
 
 void main() {
   while (true) {
-    print("\n===== PROGRESSIVE OVERLOAD TRACKER =====");
+    print("\n===== PROGRESSIVE OVERLOAD WORKOUT TRACKER =====");
     print("1. Add Workout");
     print("2. View Workouts");
     print("3. Delete Workout");
