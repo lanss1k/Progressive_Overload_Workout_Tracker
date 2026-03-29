@@ -7,8 +7,9 @@ void main() {
     print("\n===== PROGRESSIVE OVERLOAD WORKOUT TRACKER =====");
     print("1. Add Workout");
     print("2. View Workouts");
-    print("3. Delete Workout");
-    print("4. Exit");
+    print("3. Update Workout");
+    print("4. Delete Workout");
+    print("5. Exit");
     stdout.write("Enter choice: ");
 
     String? choice = stdin.readLineSync();
@@ -18,8 +19,10 @@ void main() {
     } else if (choice == '2') {
       viewWorkouts();
     } else if (choice == '3') {
-      deleteWorkout();
+      updateWorkout();
     } else if (choice == '4') {
+      deleteWorkout();
+    } else if (choice == '5') {
       print("Program ended.");
       break;
     } else {
@@ -95,10 +98,36 @@ void viewWorkouts() {
   }
 }
 
+void updateWorkout() {
+  stdout.write("Enter ID to update: ");
+  int id = int.parse(stdin.readLineSync()!);
+
+  for (var w in workouts) {
+    if (w['id'] == id) {
+      stdout.write("New Sets: ");
+      w['sets'] = int.parse(stdin.readLineSync()!);
+
+      stdout.write("New Reps: ");
+      w['reps'] = int.parse(stdin.readLineSync()!);
+
+      stdout.write("New Weight (kg): ");
+      w['weight'] = double.parse(stdin.readLineSync()!);
+
+      // recompute volume
+      w['volume'] = w['sets'] * w['reps'] * w['weight'];
+
+      print("Workout updated.");
+      return;
+    }
+  }
+
+  print("Workout ID not found.");
+}
+
 void deleteWorkout() {
   stdout.write("Enter ID to delete: ");
   int id = int.parse(stdin.readLineSync()!);
 
   workouts.removeWhere((w) => w['id'] == id);
-  print("Workout deleted if ID existed.");
+  print("Workout deleted.");
 }
